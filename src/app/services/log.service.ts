@@ -18,9 +18,7 @@ export class LogService {
   constructor() { }
 
   getLogs() : Observable<Log[]>{
-    if (localStorage.getItem('logs') === null) {
-      this.logs = this.logs;
-    } else {
+    if (localStorage.getItem('logs') != null) {
       this.logs = JSON.parse(localStorage.getItem('logs'));
     }
     
@@ -35,7 +33,7 @@ export class LogService {
 
   addLog(log: Log) {
     this.logs.unshift(log);
-    localStorage.setItem('logs', JSON.stringify(this.logs))
+    localStorage.setItem('logs', JSON.stringify(this.logs));
   }
 
   updateLog(log: Log) {
@@ -45,6 +43,7 @@ export class LogService {
       }
     });
     this.logs.unshift(log);
+    localStorage.setItem('logs', JSON.stringify(this.logs));
   }
 
   deleteLog(log: Log){
@@ -53,6 +52,7 @@ export class LogService {
         this.logs.splice(i, 1);
       }
     });
+    localStorage.setItem('logs', JSON.stringify(this.logs));
   }
 
   uuidv4() {
