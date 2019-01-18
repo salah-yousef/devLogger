@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit , OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { Log } from "../../interfaces/log";
 import { LogService } from "../../services/log.service";
 
@@ -7,16 +8,26 @@ import { LogService } from "../../services/log.service";
   templateUrl: './logs.component.html',
   styleUrls: ['./logs.component.css']
 })
-export class LogsComponent implements OnInit {
+export class LogsComponent implements OnInit  {
   logs:Log[];
+  
   constructor(
     private logService:LogService
   ) { }
 
   ngOnInit() {
     this.logService.getLogs().subscribe((logs: Log[]) => {
+      console.log('get Logs');
       this.logs = logs;
     });
+
+    this.logService.logSource.subscribe(log => {
+      console.log(log);
+      this.logService.getLogs().subscribe((logs: Log[]) => {
+        console.log('get Logs');
+        this.logs = logs;
+      });
+    })
   }
 
   onSelect(log: Log) {
@@ -33,7 +44,7 @@ export class LogsComponent implements OnInit {
 
   onDelete(log: Log) {
     if(confirm('Are you sure?')){
-      this.logService.deleteLog(log);
+     this.logs = this.logService.deleteLog(log);
     }
   }
 

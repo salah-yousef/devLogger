@@ -33,6 +33,7 @@ export class LogFormComponent implements OnInit {
   }
 
   onSubmit() {
+    
     if(this.isNew) {
       const newLog = {
         id: this.uuidv4(),
@@ -41,6 +42,7 @@ export class LogFormComponent implements OnInit {
         amISelected: null
       }
       this.logService.addLog(newLog);
+      this.logService.setFormLog(newLog);
     } else {
       const currentLog = {
         id: this.log.id,
@@ -49,7 +51,9 @@ export class LogFormComponent implements OnInit {
         amISelected: null
       }
       this.logService.updateLog(currentLog);
+      this.logService.setFormLog(currentLog);
     }
+    //this.logService.setFormLog()
 
     this.clearState();
   }

@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable, of } from "rxjs";
   providedIn: 'root'
 })
 export class LogService {
-  private logSource = new BehaviorSubject<Log>({id:null, text:null, date:null, amISelected:null});
+  logSource = new BehaviorSubject<Log>({id:null, text:null, date:null, amISelected:null});
   selectedLog = this.logSource.asObservable();
   
   logs: Log[] = [
@@ -34,25 +34,33 @@ export class LogService {
   addLog(log: Log) {
     this.logs.unshift(log);
     localStorage.setItem('logs', JSON.stringify(this.logs));
+    return this.logs;
   }
 
   updateLog(log: Log) {
-    this.logs.forEach((currentLog, i)=>{
-      if(log.id === currentLog.id) {
-        this.logs.splice(i, 1);
-      }
-    });
-    this.logs.unshift(log);
+    let foundLog = this.logs.find((v,i)=> v.id === log.id );
+    foundLog = log;
+
+    // this.logs.forEach((currentLog, i)=>{
+    //   if(log.id === currentLog.id) {
+    //     this.logs.splice(i, 1);
+    //   }
+    // });
+    //this.logs.unshift(log);
     localStorage.setItem('logs', JSON.stringify(this.logs));
+    return this.logs;
   }
 
   deleteLog(log: Log){
-    this.logs.forEach((currentLog, i)=>{
-      if(log.id === currentLog.id) {
-        this.logs.splice(i, 1);
-      }
-    });
+    let foundLog = this.logs.find((v,i)=> v.id === log.id );
+    this.logs.splice(this.logs.indexOf(foundLog) , 1);
+    // this.logs.forEach((currentLog, i)=>{
+    //   if(log.id === currentLog.id) {
+    //     this.logs.splice(i, 1);
+    //   }
+    // });
     localStorage.setItem('logs', JSON.stringify(this.logs));
+    return this.logs;
   }
 
   uuidv4() {
