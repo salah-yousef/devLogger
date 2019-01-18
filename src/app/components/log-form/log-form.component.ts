@@ -12,7 +12,7 @@ export class LogFormComponent implements OnInit {
     id: '',
     text: '',
     date: null,
-    amISelected: null  
+    amISelected: false  
   }
   isNew: boolean = true;
   constructor(
@@ -33,22 +33,25 @@ export class LogFormComponent implements OnInit {
   }
 
   onSubmit() {
+    
     if(this.isNew) {
       const newLog = {
-        id: this.uuidv4(),
+        id: this.logService.uuidv4(),
         text: this.log.text,
         date: new Date(),
-        amISelected: null
+        amISelected: false
       }
       this.logService.addLog(newLog);
+      this.logService.setFormLog(newLog);
     } else {
       const currentLog = {
         id: this.log.id,
         text: this.log.text,
         date: new Date(),
-        amISelected: null
+        amISelected: false
       }
       this.logService.updateLog(currentLog);
+      this.logService.setFormLog(currentLog);
     }
 
     this.clearState();
@@ -63,13 +66,9 @@ export class LogFormComponent implements OnInit {
       logs.forEach((log) =>{
         log.amISelected = false;
       })
+      localStorage.setItem('logs', JSON.stringify(logs));
+      this.logService.setFormLog(this.log);
     });
-  }
-
-  uuidv4() {
-    return ([1e7] as any +-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    )
   }
 
 }

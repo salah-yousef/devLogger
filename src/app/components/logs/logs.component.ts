@@ -7,33 +7,35 @@ import { LogService } from "../../services/log.service";
   templateUrl: './logs.component.html',
   styleUrls: ['./logs.component.css']
 })
-export class LogsComponent implements OnInit {
+export class LogsComponent implements OnInit  {
   logs:Log[];
+  
   constructor(
     private logService:LogService
   ) { }
 
   ngOnInit() {
-    this.logService.getLogs().subscribe((logs: Log[]) => {
-      this.logs = logs;
+    this.logService.logSource.subscribe(log => {
+      this.logService.getLogs().subscribe((logs: Log[]) => {
+        this.logs = logs;
+      });
     });
   }
 
   onSelect(log: Log) {
     this.logService.setFormLog(log);
-   //log.amISelected =! log.amISelected;
-   this.logService.getLogs().subscribe(logs => {
-      logs.forEach((curlog) =>{
-        if (curlog.id === log.id) {
-          curlog.amISelected =! curlog.amISelected;
-        }
-      });
-   });
+    let cur = this.logs.findIndex((value) => {
+      return value.id === log.id;
+    });
+    this.logs[cur].amISelected = !this.logs[cur].amISelected;
+    localStorage.setItem('logs', JSON.stringify(this.logs));
+    
   }
 
   onDelete(log: Log) {
     if(confirm('Are you sure?')){
       this.logService.deleteLog(log);
+      this.logs = JSON.parse(localStorage.getItem('logs')); 
     }
   }
 
