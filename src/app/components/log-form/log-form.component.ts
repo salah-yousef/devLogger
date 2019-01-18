@@ -54,10 +54,10 @@ export class LogFormComponent implements OnInit {
       this.logService.setFormLog(currentLog);
     }
 
-    this.clearState();
+    this.clearState(false);
   }
 
-  clearState() {
+  clearState(flag: boolean) {
     this.isNew = true;
     this.log.id = '';
     this.log.text = '';
@@ -67,7 +67,9 @@ export class LogFormComponent implements OnInit {
         log.amISelected = false;
       })
       localStorage.setItem('logs', JSON.stringify(logs));
-      this.logService.setFormLog(this.log);
+      if (flag) {
+        this.logService.setFormLog(this.log);
+      }
     });
   }
 
