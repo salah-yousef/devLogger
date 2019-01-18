@@ -44,7 +44,8 @@ export class LogsComponent implements OnInit  {
 
   onDelete(log: Log) {
     if(confirm('Are you sure?')){
-     this.logs = this.logService.deleteLog(log);
+      this.logService.deleteLog(log);
+      this.logs = JSON.parse(localStorage.getItem('logs')); 
     }
   }
 
