@@ -12,7 +12,7 @@ export class LogFormComponent implements OnInit {
     id: '',
     text: '',
     date: null,
-    amISelected: null  
+    amISelected: false  
   }
   isNew: boolean = true;
   constructor(
@@ -39,7 +39,7 @@ export class LogFormComponent implements OnInit {
         id: this.logService.uuidv4(),
         text: this.log.text,
         date: new Date(),
-        amISelected: null
+        amISelected: false
       }
       this.logService.addLog(newLog);
       this.logService.setFormLog(newLog);
@@ -48,7 +48,7 @@ export class LogFormComponent implements OnInit {
         id: this.log.id,
         text: this.log.text,
         date: new Date(),
-        amISelected: null
+        amISelected: false
       }
       this.logService.updateLog(currentLog);
       this.logService.setFormLog(currentLog);
@@ -66,9 +66,9 @@ export class LogFormComponent implements OnInit {
       logs.forEach((log) =>{
         log.amISelected = false;
       })
+      localStorage.setItem('logs', JSON.stringify(logs));
+      this.logService.setFormLog(this.log);
     });
   }
-
-
 
 }

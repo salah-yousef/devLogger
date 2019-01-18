@@ -1,5 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
-import { Component, OnInit , OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Log } from "../../interfaces/log";
 import { LogService } from "../../services/log.service";
 
@@ -16,30 +15,21 @@ export class LogsComponent implements OnInit  {
   ) { }
 
   ngOnInit() {
-    this.logService.getLogs().subscribe((logs: Log[]) => {
-      console.log('get Logs');
-      this.logs = logs;
-    });
-
     this.logService.logSource.subscribe(log => {
-      console.log(log);
       this.logService.getLogs().subscribe((logs: Log[]) => {
-        console.log('get Logs');
         this.logs = logs;
       });
-    })
+    });
   }
 
   onSelect(log: Log) {
     this.logService.setFormLog(log);
-   //log.amISelected =! log.amISelected;
-   this.logService.getLogs().subscribe(logs => {
-      logs.forEach((curlog) =>{
-        if (curlog.id === log.id) {
-          curlog.amISelected =! curlog.amISelected;
-        }
-      });
-   });
+    let cur = this.logs.findIndex((value) => {
+      return value.id === log.id;
+    });
+    this.logs[cur].amISelected = !this.logs[cur].amISelected;
+    localStorage.setItem('logs', JSON.stringify(this.logs));
+    
   }
 
   onDelete(log: Log) {
